@@ -14,16 +14,15 @@ type Event struct {
 	UserID      int       `json:"user_id" binding:"required"`
 }
 
-func (e Event) Save() error {
+func (e *Event) Save() error { // Note the pointer receiver
 	query := "INSERT INTO events (name, description, location, date_time, user_id) VALUES (?, ?, ?, ?, ?)"
 
 	stmt, err := db.DB.Prepare(query)
 	if err != nil {
 		return err
 	}
-	defer stmt.Close() // Important to close the statement
+	defer stmt.Close()
 
-	// Execute the statement with parameters (removed the query string from Exec)
 	result, err := stmt.Exec(e.Name, e.Description, e.Location, e.DateTime, e.UserID)
 	if err != nil {
 		return err
@@ -39,7 +38,7 @@ func (e Event) Save() error {
 }
 
 func GetEvents() ([]Event, error) {
-	query := "SELECT id, name, description, location, date_time, user_id FROM events"
+	query := "SELECT * FROM events"
 	rows, err := db.DB.Query(query)
 	if err != nil {
 		return nil, err
@@ -57,4 +56,17 @@ func GetEvents() ([]Event, error) {
 	}
 
 	return events, nil
+}
+
+func GetEvent(id int64) (*Event, error) {
+	query := "SELECT * FROM events WHERE id = ?"
+	row := db.DB.QueryRow(query, id)
+
+	var event Event
+	err := row.Scan(&event.ID, &event.Name, &event.Location, &event.Description, &event.DateTime, &event.UserID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &event, nil
 }
