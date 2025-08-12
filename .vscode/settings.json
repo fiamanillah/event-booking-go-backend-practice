@@ -27,5 +27,14 @@
         "titleBar.inactiveBackground": "#00506499",
         "titleBar.inactiveForeground": "#e7e7e799"
     },
-    "peacock.color": "#007997"
+    "peacock.color": "#007997",
+    "sqltools.useNodeRuntime": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "database": "${workspaceFolder:event-booking-go-backend-practice}/api.db",
+            "name": "SQLITE"
+        }
+    ]
 }
