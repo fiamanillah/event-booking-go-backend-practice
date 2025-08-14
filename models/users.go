@@ -9,7 +9,7 @@ import (
 type User struct {
 	ID       int    `json:"id"`
 	Name     string `json:"name"`
-	Email    string `json:"email" binding:"required"  `
+	Email    string `json:"email" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 
@@ -43,16 +43,17 @@ func (u *User) Save() error {
 }
 
 func (u *User) ValidateCredentials(email, password string) error {
-	query := "SELECT id, name, email, password FROM users WHERE email = ?"
-	row := db.DB.QueryRow(query, email) // Use the email parameter, not u.Email
+	query := "SELECT   email, password FROM users WHERE email = ?"
+	row := db.DB.QueryRow(query, email)
 
 	var hashedPassword string
-	err := row.Scan(&u.ID, &u.Name, &u.Email, &hashedPassword)
+	err := row.Scan(&u.Email, &hashedPassword)
 	if err != nil {
 		return errors.New("invalid email or password")
 	}
 
 	passwordIsValid := utils.CheckPassword(password, hashedPassword)
+	println(passwordIsValid)
 	if !passwordIsValid {
 		return errors.New("invalid email or password")
 	}

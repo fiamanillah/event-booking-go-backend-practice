@@ -33,8 +33,8 @@
         {
             "previewLimit": 50,
             "driver": "SQLite",
-            "database": "${workspaceFolder:event-booking-go-backend-practice}/api.db",
-            "name": "SQLITE"
+            "database": "${workspaceFolder:Go}/api.db",
+            "name": "apidb"
         }
     ]
 }

@@ -32,6 +32,7 @@ func Login(context *gin.Context) {
 		context.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	// println(user.Email, user.Password)
 
 	err = user.ValidateCredentials(user.Email, user.Password)
 	if err != nil {
@@ -39,15 +40,13 @@ func Login(context *gin.Context) {
 		return
 	}
 
-	token, err := utils.GenerateToken(user.Email, user.Name, user.ID)
+	token, err := utils.GenerateToken(user.Email)
 	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	context.JSON(http.StatusOK, gin.H{
-		"id":    user.ID,
-		"name":  user.Name,
 		"email": user.Email,
 		"token": token,
 	})
